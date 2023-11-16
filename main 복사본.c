@@ -2,7 +2,7 @@
 //  main.c
 //  SMMarble
 //
-//  Created by Juyeop Kim on 2023/11/05.
+//  Created by SoJuongOK on 2023/11/05.
 //
 
 #include <time.h>
@@ -54,7 +54,7 @@ int rolldie(int player)
     return (rand()%MAX_DIE + 1);
 }
 
-
+#if 0
 //action code when a player stays at a node
 void actionNode(int player)
 {
@@ -65,6 +65,7 @@ void actionNode(int player)
             break;
     }
 }
+#endif
 
 
 
@@ -75,6 +76,7 @@ int main(int argc, const char * argv[]) {
     int type;
     int credit;
     int energy;
+    int i;
     
     board_nr = 0;
     food_nr = 0;
@@ -84,7 +86,7 @@ int main(int argc, const char * argv[]) {
     
     
     //1. import parameters ---------------------------------------------------------------------------------
-    //1-1. boardConfig 
+    //1-1. boardConfig
     if ((fp = fopen(BOARDFILEPATH,"r")) == NULL)
     {
         printf("[ERROR] failed to open %s. This file should be in the same directory of SMMarble.exe.\n", BOARDFILEPATH);
@@ -93,16 +95,20 @@ int main(int argc, const char * argv[]) {
     }
     
     printf("Reading board component......\n");
-    while () //read a node parameter set
+    while ( fscanf(fp, "%s %i %i %i", name, &type, &credit, &energy) == 4 ) //read a node parameter set
     {
         //store the parameter set
+        smmObj_genNode(name, type, credit, energy);
+        board_nr++;
     }
     fclose(fp);
     printf("Total number of board nodes : %i\n", board_nr);
     
+    for (i = 0;i<board_nr;i++)
+        printf("node %i : %s, %i\n", i, smmObj_getNodeName(i), smmObj_getNodeType(i));
     
-    
-    //2. food card config 
+    #if 0
+    //2. food card config
     if ((fp = fopen(FOODFILEPATH,"r")) == NULL)
     {
         printf("[ERROR] failed to open %s. This file should be in the same directory of SMMarble.exe.\n", FOODFILEPATH);
@@ -119,7 +125,7 @@ int main(int argc, const char * argv[]) {
     
     
     
-    //3. festival card config 
+    //3. festival card config
     if ((fp = fopen(FESTFILEPATH,"r")) == NULL)
     {
         printf("[ERROR] failed to open %s. This file should be in the same directory of SMMarble.exe.\n", FESTFILEPATH);
@@ -160,12 +166,13 @@ int main(int argc, const char * argv[]) {
         //4-3. go forward
         //goForward();
 
-		//4-4. take action at the destination node of the board
+        //4-4. take action at the destination node of the board
         //actionNode();
         
         //4-5. next turn
         
     }
-    
+    #endif
+    system("PAUSE");
     return 0;
 }
