@@ -14,12 +14,28 @@
 #define MAX_NODE        100
 
 
+static char smmNodeName [MAX_NODETYPE][MAX_CHARNAME] =
+{
+    "lecture",
+    "restaurant",
+    "laboratory",
+    "home",
+    "gotoLab",
+    "foodChance",
+    "festival"
+};
+
+
+char* smmObj_getTypeName(int type)
+{
+    
+}
+
 static char smmObj_name[MAX_NODE][MAX_CHARNAME];
 static int smmObj_type[MAX_NODE];
 static int smmObj_credit[MAX_NODE];
 static int smmObj_energy[MAX_NODE];
 static int smmObj_noNode=0;
-
 
 
 //object generation

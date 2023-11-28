@@ -8,6 +8,16 @@
 #ifndef smm_object_h
 #define smm_object_h
 
+#define SMMNODE_TYPE_LECTURE        0    // 이 칸의 유형이 강의구나..메크로 사용
+#define SMMNODE_TYPE_RESTAURANT     1
+#define SMMNODE_TYPE_LABORATORY     2
+#define SMMNODE_TYPE_HOME           3
+#define SMMNODE_TYPE_GOTOLAB        4
+#define SMMNODE_TYPE_FOODCHANCE     5
+#define SMMNODE_TYPE_FESTIVAL       6
+
+
+
 /* node type :
     lecture,
     restaurant,

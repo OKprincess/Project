@@ -15,13 +15,17 @@
 #define FOODFILEPATH "marbleFoodConfig.txt"
 #define FESTFILEPATH "marbleFestivalConfig.txt"
 
+#define MAX_NODE    100
 
 //board configuration parameters
 static int board_nr;
 static int food_nr;
 static int festival_nr;
 
-
+static int player_nr;       // 플레이어 몇명
+static int player_energy[MAX_PLAYER];   // energy최대로
+static int player_position[MAX_PLAYER];
+static char player_name[MAX_PLAYER][MAX_CHARNAME];  // 2차원 배열로
 
 //function prototypes
 #if 0
@@ -36,7 +40,23 @@ void* findGrade(int player, char *lectureName); //find the grade from the player
 void printGrades(int player); //print all the grade history of the player
 #endif
 
-
+void generatePlayers(int n, int initEnergy)     //플레이어 생성
+{
+    int i;
+    //n time loop
+    for(i=0; i<n; i++)
+    {
+        //input name
+        printf();// 안내문구
+        scanf("%s", &player_name[i]);
+        
+        //set position
+        player_position = 0;
+        
+        // set energy
+        player_energy = initEnergy;
+    }
+}
 
 
 int rolldie(int player)
@@ -143,14 +163,19 @@ int main(int argc, const char * argv[]) {
     
     
     //2. Player configuration ---------------------------------------------------------------------------------
-    /*
+    
     do
     {
         //input player number to player_nr
+        printf("intput player number: ");
+        scanf("%d", &player_nr);
+        fflush(stdin);                  // 원하는 입력만 받고 비우기
     }
-    while ();
+    while (player_nr < 0 || player_nr > MAX_PLAYER);
+    
+    generatePlayers(player_nr, initEnergy);
     generatePlayers();
-    */
+    
     
     //3. SM Marble game starts ---------------------------------------------------------------------------------
     while () //is anybody graduated?
