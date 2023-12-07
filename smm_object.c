@@ -51,7 +51,7 @@ static int      smmObj_type[MAX_NODE];
 static int      smmObj_credit[MAX_NODE];
 static int      smmObj_energy[MAX_NODE];
 */
-
+//static smmObject_t smm_node[MAX_NODE];
 static int      smmObj_noNode=0;
 
 // 3. 관련 함수 변경-------------------------------------------------------

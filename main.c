@@ -243,28 +243,28 @@ int main(int argc, const char * argv[]) {
     generatePlayers(player_nr, initEnergy);
     // player 상태를 for문으로 확인해보기
     
-#if 0
+
     //3. SM Marble game starts ---------------------------------------------------------------------------------
-    while () //is anybody graduated?
+    while (1) //is anybody graduated?
     {
         int die_result;
         
         //4-1. initial printing
-        //printPlayerStatus();
+        printPlayerStatus();
         
         //4-2. die rolling (if not in experiment)
-        
+        die_result = rolldie(turn);
         
         //4-3. go forward
-        //goForward();
+        goForward(turn, die_result);
 
         //4-4. take action at the destination node of the board
-        //actionNode();
+        actionNode(turn);
         
         //4-5. next turn
-        
+        turn = (turn+1)%player_nr;
     }
-    #endif
+   
 
     return 0;
 }
