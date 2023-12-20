@@ -140,7 +140,7 @@ void actionNode(int player)
     switch(type)
     {
         //case lecture:
-        case SMMNODE_TYPE_LECTURE:  // 이게 메크로로 0으로 정의니까 0일때!
+        case SMMNODE_TYPE_LECTURE:  // 수업에서는 에너지 소요&랜덤성적
             
             cur_player[player].accumCredit += smmObj_getNodeCredit(boardPtr);
             cur_player[player].energy -= smmObj_getNodeEnergy(boardPtr);
@@ -150,6 +150,39 @@ void actionNode(int player)
             smmdb_addTail(LISTNO_OFFSET_GRADE + player, gradePtr);
                         
             break;
+        
+        case SMMNODE_TYPE_RESTAURANT:
+            cur_player[player].accumCredit += smmObj_getNodeCredit(boardPtr);
+            cur_player[player].energy += smmObj_getNodeEnergy(boardPtr);
+            
+            break;
+            
+        case SMMNODE_TYPE_LABORATORY:
+            
+            break;
+            
+            
+        case SMMNODE_TYPE_HOME:     // 집에서는 에너지 보충받음
+            cur_player[player].accumCredit += smmObj_getNodeCredit(boardPtr);
+            cur_player[player].energy += smmObj_getNodeEnergy(boardPtr);
+            break;
+            
+        case SMMNODE_TYPE_GOTOLAB:  // 실험중 상태로 전환되며 실험실로 이동
+            
+            break;
+            
+        case SMMNODE_TYPE_FOODCHANCE:
+            cur_player[player].accumCredit += smmObj_getNodeCredit(boardPtr);
+            cur_player[player].energy += smmObj_getNodeEnergy(boardPtr);
+            break;
+            
+        case SMMNODE_TYPE_FESTIVAL:
+            cur_player[player].accumCredit += smmObj_getNodeCredit(boardPtr);
+            char c;
+            printf("press any key to get Festival card");
+            c= getchar();
+            printf("%s", smmFesival[rand()%5]);
+            break;
             
         default:
             break;
@@ -157,7 +190,7 @@ void actionNode(int player)
 }
 // ===================================================================================
 
-// ========================앞으로 가라====================
+// ========================앞으로 가라===================================
 void goForward(int player, int step)
 {
     void *boardPtr;
@@ -199,6 +232,7 @@ int main(int argc, const char * argv[]) {
         return -1;
     }
     
+    // 게임시작
     printf("Reading board component......\n");      // 파일에서 받아오기
     while ( fscanf(fp, "%s %i %i %i", name, &type, &credit, &energy) == 4 ) //read a node parameter set
     {
@@ -223,7 +257,7 @@ int main(int argc, const char * argv[]) {
     }
     // printf("(%s)", smmObj_getTypeName(SMMNODE_TYPE_LECTURE));
          
-    #if 0
+    
     //2. food card config
     if ((fp = fopen(FOODFILEPATH,"r")) == NULL)
     {
@@ -232,9 +266,15 @@ int main(int argc, const char * argv[]) {
     }
     
     printf("\n\nReading food card component......\n");
-    while () //read a food parameter set
+    
+    // food card 정보 불러오기
+    while (fscanf(fp, "%s %i", smmFoodCard,) == 2) //read a food parameter set
     {
         //store the parameter set
+        
+        void  *boardObj = smmObj_genObject(name, smmObjType_card, type, credit, energy+food_nr, 0);
+        smmdb_addTail(LISTNO_NODE, boardObj);
+        
     }
     fclose(fp);
     printf("Total number of food cards : %i\n", food_nr);
@@ -249,13 +289,16 @@ int main(int argc, const char * argv[]) {
     }
     
     printf("\n\nReading festival card component......\n");
-    while () //read a festival card string
+    while (fscanf(fp, "%s") == 1) //read a festival card string
     {
+    
+        
+        festival_nr ++;
         //store the parameter set
     }
     fclose(fp);
     printf("Total number of festival cards : %i\n", festival_nr);
-#endif
+
     
     
     //2. Player configuration ---------------------------------------------------------------------------------

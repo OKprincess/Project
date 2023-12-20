@@ -25,6 +25,32 @@ static char smmNodeName [MAX_NODETYPE][MAX_CHARNAME] =
     "festival"
 };
 
+static char smmFoodCard [14][MAX_CHARNAME] =
+{
+    "chicken",
+    "beer",
+    "tanghulu",
+    "ramen",
+    "gamja",
+    "cupbab",
+    "zazang",
+    "schoolfood",
+    "pasta",
+    "pizza",
+    "hamburger",
+    "sandwich",
+    "yogart",
+    "bibim"
+};
+
+static char smmFestival [][MAX_CHARNAME] =
+{
+    "sing a song",
+    "After GArduate?",
+    "What do you want to do at home?",
+    "Talk about programming class.",
+    "Introduce your favorite restaurnt."
+};
 
 // ========================게임 보드의 구조체화====================================
 
@@ -37,6 +63,28 @@ typedef struct smmObject {
     int energy;
     smmObjGrade_e grade;
 } smmObject_t;  // type을 뜻하는 의미에서
+
+typedef struct smmFestival{
+    char fes[MAX_CHARNAME];
+    
+} smmFestival_name;
+
+typedef enum smmFood {
+    chicken     = 0,
+    beer        = 1,
+    tanghulu    = 2,
+    ramen       = 3,
+    gamja       = 4,
+    cupbab      = 5,
+    zazang      = 6,
+    schoolfood  = 7,
+    pasta       = 8,
+    pizza       = 9,
+    hamburger   = 10,
+    sandwich    = 11,
+    yogart      = 12,
+    bibim       = 13
+} smmFood_e;
 
 // 2. 구조체 배열 변수 정의------------------------------------------------
 // smmObject_t smm_node[MAX_NODE];     // struct안해도 ㄱㅊ

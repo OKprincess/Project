@@ -24,6 +24,8 @@ typedef enum smmObjType {
     smmObjType_grade
 } smmObjType_e;
 
+
+
 typedef enum smmObjGrade {
     smmObjGrade_Ap = 0,
     smmObjGrade_A0 = 1,
