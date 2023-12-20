@@ -26,23 +26,6 @@ static char smmNodeName [MAX_NODETYPE][MAX_CHARNAME] =
 };
 
 
-char* smmObj_getTypeName(int type)
-{
-    return (char*)smmNodeName[type];
-}
-
-typedef enum smmObjGrade {
-    smmObjGrade_Ap = 0,
-    smmObjGrade_A0,
-    smmObjGrade_Am,
-    smmObjGrade_Bp,
-    smmObjGrade_B0,
-    smmObjGrade_Bm,
-    smmObjGrade_Cp,
-    smmObjGrade_C0,
-    smmObjGrade_Cm
-} smmObjGrade_e;
-
 // ========================게임 보드의 구조체화====================================
 
 // 1. 구조체 형식 정의 (typedef struct문법 활용)-------------------------
@@ -85,6 +68,12 @@ void* smmObj_genObject(char* name, smmObjType_e objType, int type, int credit, i
     return ptr;
 }
 
+char* smmObj_getTypeName(int type)
+{
+    return (char*)smmNodeName[type];
+}
+
+// 노드이름
 char* smmObj_getNodeName(void* obj)
 {
     smmObject_t* ptr = (smmObject_t*)obj;
@@ -92,37 +81,38 @@ char* smmObj_getNodeName(void* obj)
     return ptr->name;
 }
 
-int smmObj_getNodeType(int node_nr)
+// 노드타입
+int smmObj_getNodeType(int* type)
 {
-    return smm_node[node_nr].type;
+    smmObject_t* ptr = (smmObject_t*)type;
+    
+    return ptr -> objType;
+    //return smm_node[node_nr].type;
 }
 
-int smmObj_getNodeCredit(int node_nr)
+// node credit받기
+int smmObj_getNodeCredit(int* credit)
 {
-    return smm_node[node_nr].credit;
+    smmObject_t* ptr = (smmObject_t*)credit;
+    
+    return ptr -> credit;
+    //return smm_node[node_nr].credit;
 }
 
-int smmObj_getNodeEnergy(int node_nr)
+// node 에너지 받기
+int smmObj_getNodeEnergy(int* energy)
 {
-    return smm_node[node_nr].energy;
+    smmObject_t* ptr = (smmObject_t*)energy;
+    
+    return ptr -> energy;
+    //return smm_node[node_nr].energy;
 }
 
-#if 0
-
-
-//member retrieving
-
-
-
-//element to string
-char* smmObj_getNodeName(smmNode_e type)
+// grade 받기
+int smmObj_getNodeGrade(int* grade)
 {
-    return smmNodeName[type];
+    smmObject_t* ptr = (smmObject_t*)grade;
+    
+    return ptr -> grade;
 }
 
-char* smmObj_getGradeName(smmGrade_e grade)
-{
-    return smmGradeName[grade];
-}
-
-#endif
