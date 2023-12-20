@@ -56,7 +56,21 @@ smmGrade_e takeLecture(int player, char *lectureName, int credit); //take the le
 void* findGrade(int player, char *lectureName); //find the grade from the player's grade history
 void printGrades(int player); //print all the grade history of the player
 #endif
-
+// ============================특정 학생 평균 성적~?======================================
+float calcAverageGrade(int player)
+{
+    float Average;
+    return Average;
+}
+// ============================누가 졸업했나요~?===================================
+int isGraduated(void)
+{
+    int i=0;
+    if(cur_player[player_nr].accumCredit >= GRADUATE_CREDIT)
+        i=1;
+    
+    return i;
+}
 // ============================grade출력 함수========================================
 void printGrades(int player)
 {
@@ -177,8 +191,7 @@ void actionNode(int player)
                 }
                     
             }
-            
-            
+            smmdb_addTail(LISTNO_NODE + player, boardPtr);
             break;
             
         case SMMNODE_TYPE_HOME:     // 집에서는 에너지 보충받음
@@ -202,7 +215,7 @@ void actionNode(int player)
             fflush(stdin);
             cur_player[player].accumCredit += smmObj_getNodeCredit(boardPtr);
             cur_player[player].energy += smmObj_getNodeEnergy(smmdb_getData(LISTNO_FOODCARD, rand()%food_nr));
-            
+            smmdb_addTail(LISTNO_NODE + player, boardPtr);
             break;
             
         case SMMNODE_TYPE_FESTIVAL:
@@ -348,7 +361,7 @@ int main(int argc, const char * argv[]) {
     do
     {
         //input player number to player_nr
-        printf("intput player number: ");
+        printf("\nintput player number: ");
         scanf("%d", &player_nr);
         fflush(stdin);                  // 원하는 입력만 받고 비우기
     }
@@ -360,7 +373,7 @@ int main(int argc, const char * argv[]) {
     
 
     //3. SM Marble game starts ---------------------------------------------------------------------------------
-    while (1) //is anybody graduated?
+    while (isGraduated()==1 || cur_player[turn].position == 0) //is anybody graduated?
     {
         int die_result;
         
