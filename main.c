@@ -48,8 +48,6 @@ static char player_name[MAX_PLAYER][MAX_CHARNAME];  // 2차원 배열로
 //function prototypes
 #if 0
 int isGraduated(void); //check if any player is graduated
-void generatePlayers(int n, int initEnergy); //generate a new player
-void printGrades(int player); //print grade history of the player
 void goForward(int player, int step); //make player go "step" steps on the board (check if player is graduated)
 void printPlayerStatus(void); //print all player status at the beginning of each turn
 float calcAverageGrade(int player); //calculate average grade of the player
@@ -84,10 +82,10 @@ void printPlayerStatus(void)
     }
     
 }
-// ==================================================================================
+// =============================================================================
 
 
-// ===============================player 생성 함수======================================
+// ==========================player 생성 함수======================================
 void generatePlayers(int n, int initEnergy)
 {
     int i;
@@ -108,10 +106,10 @@ void generatePlayers(int n, int initEnergy)
         cur_player[i].flag_graduate = 0;
     }
 }
-// ======================================================================================
+// ==========================================================================
 
 
-// ================================주사위 굴리기=============================================
+// ================================주사위 굴리기=================================
 int rolldie(int player)
 {
     char c;
@@ -127,7 +125,7 @@ int rolldie(int player)
     return (rand()%MAX_DIE + 1);
 }
 
-// =======================================================================================
+// ===========================================================================
 
 // =====================Node 함수==============================================
 //action code when a player stays at a node
@@ -142,13 +140,13 @@ void actionNode(int player)
     switch(type)
     {
         //case lecture:
-        case SMMNODE_TYPE_LECTURE:
+        case SMMNODE_TYPE_LECTURE:  // 이게 메크로로 0으로 정의니까 0일때!
             
-            cur_player[player].accumCredit += smmObj_getNodeCredit(cur_player[player].position);
-            cur_player[player].energy -= smmObj_getNodeEnergy(cur_player[player].position);
+            cur_player[player].accumCredit += smmObj_getNodeCredit(boardPtr);
+            cur_player[player].energy -= smmObj_getNodeEnergy(boardPtr);
             
             // grade generation
-            gradePtr = smmObj_genObject(name, smmObjType_grade, 0, smmObj_getNodeCredit( boardPtr ), 0, ??);
+            gradePtr = smmObj_genObject(name, smmObjType_grade, 0, smmObj_getNodeCredit(boardPtr), 0,rand()%9);
             smmdb_addTail(LISTNO_OFFSET_GRADE + player, gradePtr);
                         
             break;
@@ -182,7 +180,7 @@ int main(int argc, const char * argv[]) {
     int credit;
     int energy;
     int i;
-    int initEnergy;
+    int initEnergy = 0;
     int turn=0;
     
     board_nr = 0;
@@ -217,8 +215,12 @@ int main(int argc, const char * argv[]) {
          
     
     for (i = 0;i<board_nr;i++)
+    {
+        void *boardObj = smmdb_getData(LISTNO_NODE, i);
+        
         printf("node %i : %s, %i(%s), credit %i, energy %i\n",
-                    i, smmObj_getNodeName(boardObj),smmObj_getNodeType(boardObj), smmObj_getTypeName(smmObj_getNodeType(boardObj)),smmObj_getNodeCredit(boardObj), smmObj_getNodeEnergy(boardObj));
+               i, smmObj_getNodeName(boardObj),smmObj_getNodeType(boardObj), smmObj_getTypeName(smmObj_getNodeType(boardObj)),smmObj_getNodeCredit(boardObj), smmObj_getNodeEnergy(boardObj));
+    }
     // printf("(%s)", smmObj_getTypeName(SMMNODE_TYPE_LECTURE));
          
     #if 0
@@ -293,7 +295,7 @@ int main(int argc, const char * argv[]) {
         turn = (turn+1)%player_nr;
     }
    
-         free(cur_player);
+    free(cur_player);
 
     return 0;
 }

@@ -26,14 +26,14 @@ typedef enum smmObjType {
 
 typedef enum smmObjGrade {
     smmObjGrade_Ap = 0,
-    smmObjGrade_A0,
-    smmObjGrade_Am,
-    smmObjGrade_Bp,
-    smmObjGrade_B0,
-    smmObjGrade_Bm,
-    smmObjGrade_Cp,
-    smmObjGrade_C0,
-    smmObjGrade_Cm
+    smmObjGrade_A0 = 1,
+    smmObjGrade_Am = 2,
+    smmObjGrade_Bp = 3,
+    smmObjGrade_B0 = 4,
+    smmObjGrade_Bm = 5,
+    smmObjGrade_Cp = 6,
+    smmObjGrade_C0 = 7,
+    smmObjGrade_Cm = 8
 } smmObjGrade_e;
 
 /* node type :

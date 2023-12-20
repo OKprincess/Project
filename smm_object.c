@@ -116,3 +116,4 @@ int smmObj_getNodeGrade(int* grade)
     return ptr -> grade;
 }
 
+
