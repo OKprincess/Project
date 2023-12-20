@@ -25,7 +25,8 @@ static char smmNodeName [MAX_NODETYPE][MAX_CHARNAME] =
     "festival"
 };
 
-static char smmFoodCard [14][MAX_CHARNAME] =
+/*
+static char smmFoodCard [MAX_CHARNAME] =
 {
     "chicken",
     "beer",
@@ -45,12 +46,13 @@ static char smmFoodCard [14][MAX_CHARNAME] =
 
 static char smmFestival [][MAX_CHARNAME] =
 {
-    "sing a song",
-    "After GArduate?",
-    "What do you want to do at home?",
-    "Talk about programming class.",
-    "Introduce your favorite restaurnt."
+    "sing_a_song",
+    "After_Graduate?",
+    "What_do_you_want_to_do_at_home?",
+    "Talk_about_programming_class.",
+    "Introduce_your_favorite_restaurnt."
 };
+*/
 
 // ========================게임 보드의 구조체화====================================
 
@@ -64,39 +66,8 @@ typedef struct smmObject {
     smmObjGrade_e grade;
 } smmObject_t;  // type을 뜻하는 의미에서
 
-typedef struct smmFestival{
-    char fes[MAX_CHARNAME];
-    
-} smmFestival_name;
-
-typedef enum smmFood {
-    chicken     = 0,
-    beer        = 1,
-    tanghulu    = 2,
-    ramen       = 3,
-    gamja       = 4,
-    cupbab      = 5,
-    zazang      = 6,
-    schoolfood  = 7,
-    pasta       = 8,
-    pizza       = 9,
-    hamburger   = 10,
-    sandwich    = 11,
-    yogart      = 12,
-    bibim       = 13
-} smmFood_e;
-
 // 2. 구조체 배열 변수 정의------------------------------------------------
 // smmObject_t smm_node[MAX_NODE];     // struct안해도 ㄱㅊ
-
-// 지우는 것 보다 남겨두기(컴파일은 X)
-/*
-static char     smmObj_name[MAX_NODE][MAX_CHARNAME];
-static int      smmObj_type[MAX_NODE];
-static int      smmObj_credit[MAX_NODE];
-static int      smmObj_energy[MAX_NODE];
-*/
-//static smmObject_t smm_node[MAX_NODE];
 
 // 3. 관련 함수 변경-------------------------------------------------------
 //object generation
@@ -163,5 +134,3 @@ int smmObj_getNodeGrade(int* grade)
     
     return ptr -> grade;
 }
-
-
