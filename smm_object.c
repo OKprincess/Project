@@ -105,7 +105,7 @@ int smmObj_getNodeType(int* type)
 {
     smmObject_t* ptr = (smmObject_t*)type;
     
-    return ptr -> objType;
+    return ptr -> type;
     //return smm_node[node_nr].type;
 }
 

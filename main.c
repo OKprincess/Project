@@ -27,6 +27,7 @@ static int player_nr;       // 플레이어 몇명
 
 // -----------------------player를 구조체로 선언하기-----------------------------
 typedef struct player{
+    int     exe_lab;
     int     energy;
     int     position;
     char    name[MAX_CHARNAME];
@@ -74,10 +75,11 @@ void printPlayerStatus(void)
     
     for (i=0; i<player_nr; i++)
     {
-        printf("%s : credit %i, energy %i, position %i\n",
+        printf("\n%s : credit %i, energy %i, experiment %i, position %i\n",
                cur_player[i].name,
                cur_player[i].accumCredit,
                cur_player[i].energy,
+               cur_player[i].exe_lab,
                cur_player[i].position);
     }
     
@@ -93,7 +95,7 @@ void generatePlayers(int n, int initEnergy)
     for(i=0; i<n; i++)
     {
         //input name
-        printf("Input player %i's name :",i);      // player이름 입력하라고 출력
+        printf("\n\nInput player %i's name :",i);      // player이름 입력하라고 출력
         scanf("%s", cur_player[i].name);    // i번째 player의 이름 저장
         fflush(stdin);
         
@@ -104,6 +106,7 @@ void generatePlayers(int n, int initEnergy)
         cur_player[i].energy = initEnergy;
         cur_player[i].accumCredit = 0;
         cur_player[i].flag_graduate = 0;
+        cur_player[i].exe_lab = 0;
     }
 }
 // ==========================================================================
@@ -113,7 +116,7 @@ void generatePlayers(int n, int initEnergy)
 int rolldie(int player)
 {
     char c;
-    printf(" Press any key to roll a die (press g to see grade): ");
+    printf("\nPress any key to roll a die (press g to see grade): ");
     c = getchar();
     fflush(stdin);
     
@@ -132,61 +135,83 @@ int rolldie(int player)
 void actionNode(int player)
 {
     void *boardPtr = smmdb_getData(LISTNO_NODE, cur_player[player].position );
-        //int type = smmObj_getNodeType( cur_player[player].position );
-        int type = smmObj_getNodeType( boardPtr );
-        char *name = smmObj_getNodeName( boardPtr );
-        void *gradePtr;
+    //int type = smmObj_getNodeType( cur_player[player].position );
+    int type = smmObj_getNodeType( boardPtr );
+    int success=0;
+    char *name = smmObj_getNodeName( boardPtr );
+    void *gradePtr;
     
     switch(type)
     {
         //case lecture:
         case SMMNODE_TYPE_LECTURE:  // 수업에서는 에너지 소요&랜덤성적
-            
+            printf("\nLet's study! You lose Energy %i\n", smmObj_getNodeEnergy(boardPtr));
             cur_player[player].accumCredit += smmObj_getNodeCredit(boardPtr);
             cur_player[player].energy -= smmObj_getNodeEnergy(boardPtr);
             
             // grade generation
             gradePtr = smmObj_genObject(name, smmObjType_grade, 0, smmObj_getNodeCredit(boardPtr), 0,rand()%9);
             smmdb_addTail(LISTNO_OFFSET_GRADE + player, gradePtr);
-            printGrades(player);
             break;
         
         case SMMNODE_TYPE_RESTAURANT:
+            printf("\nyou get energy %i\n", smmObj_getNodeEnergy(boardPtr));
             cur_player[player].accumCredit += smmObj_getNodeCredit(boardPtr);
             cur_player[player].energy += smmObj_getNodeEnergy(boardPtr);
             smmdb_addTail(LISTNO_NODE + player, boardPtr);
             break;
 
         case SMMNODE_TYPE_LABORATORY:
-            if(smmObj_getNodeType(boardPtr) == SMMNODE_TYPE_GOTOLAB)
+            cur_player[player].accumCredit += smmObj_getNodeCredit(boardPtr);
+            if(cur_player[player].exe_lab == 1)
             {
-                rolldie();
+                int roll;
+                roll = rolldie(player);
+                if(roll >= success){
+                    cur_player[player].energy -= smmObj_getNodeEnergy(boardPtr);
+                    printf("\nYour experiment is Success!!\n");
+                    cur_player[player].exe_lab = 0;
+                }
+                else{
+                    printf("\nYour experiment is fail!!");
+                }
+                    
             }
+            
+            
             break;
             
-            /*
         case SMMNODE_TYPE_HOME:     // 집에서는 에너지 보충받음
             cur_player[player].accumCredit += smmObj_getNodeCredit(boardPtr);
             cur_player[player].energy += smmObj_getNodeEnergy(boardPtr);
+            smmdb_addTail(LISTNO_NODE+player , boardPtr);
             break;
             
         case SMMNODE_TYPE_GOTOLAB:  // 실험중 상태로 전환되며 실험실로 이동
-            
+            cur_player[player].accumCredit += smmObj_getNodeCredit(boardPtr);
+            cur_player[player].position = 8;
+            cur_player[player].exe_lab = 1;
+            success = rand()%MAX_DIE+1;
+            printf("\nLet's go laboratory!! Succes stantard is %i\n",success);
+            smmdb_addTail(LISTNO_NODE + player, boardPtr);
             break;
             
         case SMMNODE_TYPE_FOODCHANCE:
+            printf("\nfood Chance!! press any key to get random food\n");
+            char c = getchar();
+            fflush(stdin);
             cur_player[player].accumCredit += smmObj_getNodeCredit(boardPtr);
-            cur_player[player].energy += smmObj_getNodeEnergy(boardPtr);
+            cur_player[player].energy += smmObj_getNodeEnergy(smmdb_getData(LISTNO_FOODCARD, rand()%food_nr));
+            
             break;
             
         case SMMNODE_TYPE_FESTIVAL:
             cur_player[player].accumCredit += smmObj_getNodeCredit(boardPtr);
-            char c;
-            printf("press any key to get Festival card");
-            c= getchar();
-            printf("%s", smmFesival[rand()%5]);
+            rolldie(player);
+            printf("%s\n\n", smmObj_getNodeName(smmdb_getData(LISTNO_FESTCARD, rand()%MAX_DIE)));
+            smmdb_addTail(LISTNO_FESTCARD + player, boardPtr);
             break;
-            */
+
         default:
             break;
     }
@@ -198,6 +223,9 @@ void goForward(int player, int step)
 {
     void *boardPtr;
     cur_player[player].position += step;
+    if(cur_player[player].position > 15)
+        cur_player[player].position = cur_player[player].position%16;
+    
     boardPtr = smmdb_getData(LISTNO_NODE, cur_player[player].position );
      
      printf("%s go to node %i (name: %s)\n",
